@@ -20,6 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Authenticate with Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v0
+      with:
+        workload_identity_provider: projects/22448147000/locations/global/workloadIdentityPools/ci-pool/providers/github
+        service_account: gha-select-qa-env@moonswitch-dev.iam.gserviceaccount.com
     - uses: ./
       with:
-        milliseconds: 1000
+        table: qa-envs
