@@ -30,5 +30,8 @@ jobs:
         workload_identity_provider: projects/22448147000/locations/global/workloadIdentityPools/ci-pool/providers/github
         service_account: gha-select-qa-env@moonswitch-dev.iam.gserviceaccount.com
     - uses: ./
+      id: select-qa-env
       with:
         table: qa-envs
+    - name: Check Output
+      run: echo "The url for the selected QA environment is ${{ steps.select-qa-env.outputs.url }}"
