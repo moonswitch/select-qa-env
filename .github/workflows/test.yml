@@ -6,6 +6,9 @@ on:
       - main
       - 'releases/*'
 
+permissions:
+  id-token: write
+
 jobs:
   # unit tests
   units:
