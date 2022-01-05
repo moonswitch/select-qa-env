@@ -29,7 +29,7 @@ async function run() {
   
       env = envs[0];
       // Mark the environment as in_use and set the PR for reference.
-      env.update({in_use: true, pr})
+      env.ref.update({in_use: true, pr})
     }
 
     url = env.data().url; 
