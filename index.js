@@ -14,12 +14,15 @@ async function run() {
     let url;
 
     // First check if there is already an environment assigned to this PR.
+    core.info(`Checking if there is already an environment assinged to ${pr}...`);
     const current_envs = await table.where('pr', '==', pr).where('in_use', '==', true).limit(1).get();
 
     if (!current_envs.empty) {
+      core.info(`Found an active QA environment for ${pr}`)
       env = current_envs[0];
     } else {
       // No environment currently assigned. Check for available environments.
+      core.info(`No active QA environment for ${pr}. Looking for an available environment...`)
       const envs = await table.where('in_use', '==', false).limit(1).get()
 
       // No environments available. Bail out.
@@ -29,6 +32,7 @@ async function run() {
   
       env = envs[0];
       // Mark the environment as in_use and set the PR for reference.
+      core.info(`Found an available environment. Marking it as in_use by ${pr}`)
       env.ref.update({in_use: true, pr})
     }
 
