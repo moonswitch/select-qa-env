@@ -1,13 +1,13 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: Select QA Environment
+description: Select an available QA environment
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  Table:
+    description: Name of the Google Firestore Collection to query for environment details.
     required: true
-    default: '1000'
+    default: qa-envs
 outputs:
-  time: # output will be available to future steps
-    description: 'The current time after waiting'
+  url:
+    description: The URL of the QA environment
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node16
+  main: dist/index.js

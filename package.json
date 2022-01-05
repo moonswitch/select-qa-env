@@ -1,31 +1,33 @@
 {
-  "name": "javascript-action",
-  "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "name": "select-qa-env",
+  "version": "0.1.0",
+  "description": "GitHub Action to select an available QA environment.",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
-    "test": "jest",
+    "test": "echo 'No tests yet!'",
     "all": "npm run lint && npm run prepare && npm run test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-action.git"
+    "url": "git+https://github.com/moonswitch/select-qa-env.git"
   },
   "keywords": [
     "GitHub",
     "Actions",
-    "JavaScript"
+    "Dynamic QA environments"
   ],
-  "author": "",
+  "author": "Moonswitch",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/actions/javascript-action/issues"
+    "url": "https://github.com/moonswitch/select-qa-env/issues"
   },
-  "homepage": "https://github.com/actions/javascript-action#readme",
+  "homepage": "https://github.com/moonswitch/select-qa-env#readme",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.2.5",
+    "@actions/github": "^5.0.0",
+    "@google-cloud/firestore": "^5.0.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.31.1",
