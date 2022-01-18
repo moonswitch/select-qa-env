@@ -27,7 +27,7 @@
   "dependencies": {
     "@actions/core": "^1.2.5",
     "@actions/github": "^5.0.0",
-    "@google-cloud/firestore": "^5.0.1"
+    "@google-cloud/firestore": "^5.0.2"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.33.1",
