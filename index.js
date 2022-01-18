@@ -9,7 +9,7 @@ async function run() {
     const table_name = core.getInput('table');
     const table = db.collection(table_name);
     const number = github.context.issue.number;
-    const repo = github.context.repo.full_name;
+    const repo = github.context.payload.repository.full_name;
     const pr = `${repo}/pr-${number}`
     const branch = github.context.payload.pull_request.head.ref; 
     let env;
