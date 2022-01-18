@@ -1,7 +1,6 @@
 const core = require('@actions/core');
-const Firestore = require('@google-cloud/firestore');
+const { FieldValue, Firestore } = require('@google-cloud/firestore');
 const github = require('@actions/github');
-const { FieldValue } = require('@google-cloud/firestore');
 
 const db = new Firestore();
 
