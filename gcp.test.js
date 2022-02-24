@@ -1,5 +1,5 @@
 const { Firestore } = require('@google-cloud/firestore');
-const { setupData, deleteData } = require('./test_helpers');
+const { setupFirebaseData, deleteFirebaseData } = require('./test_helpers');
 const table_name = 'gcp-tests';
 
 const db = new Firestore();
@@ -7,11 +7,11 @@ const db = new Firestore();
 describe('gcp', () => {
   jest.setTimeout(10000)
   beforeEach(async () => {
-    return await setupData(db, table_name);
+    return await setupFirebaseData(db, table_name);
   });
   
   afterEach(async () => {
-    return await deleteData(db, table_name);
+    return await deleteFirebaseData(db, table_name);
   });
 
   const gcp = require('./gcp');

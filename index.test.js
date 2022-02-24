@@ -2,7 +2,7 @@ const process = require('process');
 const cp = require('child_process');
 const path = require('path');
 const { Firestore } = require('@google-cloud/firestore');
-const { setupData, deleteData } = require('./test_helpers');
+const { setupFirebaseData, deleteFirebaseData } = require('./test_helpers');
 const table_name = 'action-tests';
 
 const db = new Firestore();
@@ -22,11 +22,11 @@ describe.skip('github action', () => {
   jest.setTimeout(10000)
   jest.mock('./gcp');
   beforeEach(async () => {
-    return await setupData(db, table_name);
+    return await setupFirebaseData(db, table_name);
   });
   
   afterEach(async () => {
-    return await deleteData(db, table_name);
+    return await deleteFirebaseData(db, table_name);
   });
 
   it('runs', () => {

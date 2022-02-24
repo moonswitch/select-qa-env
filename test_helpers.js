@@ -1,8 +1,8 @@
-async function setupData(db, table_name) {
+async function setupFirebaseData(db, table_name) {
   const table = db.collection(table_name);
 
   if ((await table.listDocuments()).length > 0) {
-    await deleteData()
+    await deleteFirebaseData()
   }
   
   const qa_envs = ['qa1', 'qa2', 'qa3', 'qa4', 'qa5'];
@@ -17,12 +17,12 @@ async function setupData(db, table_name) {
   });
 }
 
-async function deleteData(db, table_name) {
+async function deleteFirebaseData(db, table_name) {
   const table = db.collection(table_name);
   return await db.recursiveDelete(table);
 }
 
 module.exports = {
-  setupData,
-  deleteData
+  setupFirebaseData,
+  deleteFirebaseData,
 };
