@@ -1,40 +1,6 @@
 const core = require('@actions/core');
-const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocument } = require('@aws-sdk/lib-dynamodb');
-const isTest = process.env.JEST_WORKER_ID;
 
-let aws = async function (table_name, pr, branch) {
-  // TODO: abstract client / db setup out to a setup method
-  const client = new DynamoDBClient({
-    ...(isTest && {
-      endpoint: 'http://localhost:8000',
-      sslEnabled: false,
-      region: 'local-env',
-      credentials: {
-        accessKeyId: 'fakeMyKeyId',
-        secretAccessKey: 'fakeSecretAccessKey'
-      }
-    })
-  });
-  
-  const marshallOptions = {
-    // Whether to automatically convert empty strings, blobs, and sets to `null`.
-    convertEmptyValues: false, // false, by default.
-    // Whether to remove undefined values while marshalling.
-    removeUndefinedValues: false, // false, by default.
-    // Whether to convert typeof object to map attribute.
-    convertClassInstanceToMap: false, // false, by default.
-  };
-  
-  const unmarshallOptions = {
-    // Whether to return numbers as a string instead of converting them to native JavaScript numbers.
-    wrapNumbers: false, // false, by default.
-  };
-  
-  const translateConfig = { marshallOptions, unmarshallOptions };
-
-  const db = DynamoDBDocument.from(client, translateConfig)
-
+let aws = async function (ddb, table_name, pr, branch) {
   const scanByPr = {
     TableName: table_name,
     FilterExpression: 'contains (pull_requests, :pull_request)',
@@ -57,7 +23,7 @@ let aws = async function (table_name, pr, branch) {
 
   // First check if there is already an environment assigned to this PR.
   core.debug(`Checking if there is already an environment assinged to ${pr}...`);
-  const current_envs = await db.scan(scanByPr);
+  const current_envs = await ddb.scan(scanByPr);
 
   if (current_envs.Count == 1) {
     core.debug(`Found an active QA environment for ${pr}`);
@@ -67,7 +33,7 @@ let aws = async function (table_name, pr, branch) {
   } else {
     // Check for another env using the same branch name
     core.debug(`No active QA environment for ${pr}. Looking for an active QA environment with the same branch (${branch})..`);
-    const branch_envs = await db.scan(scanByBranch);
+    const branch_envs = await ddb.scan(scanByBranch);
 
     if (branch_envs.Count > 0) {
       core.debug(`Found an active QA environment for branch ${branch}. Adding ${pr} to it...`);
@@ -75,7 +41,7 @@ let aws = async function (table_name, pr, branch) {
     } else {
       // No environment currently assigned. Check for available environments.
       core.debug(`No active QA environment for ${pr}. Looking for an available environment...`);
-      const available_envs = await db.scan(scanByInUse);
+      const available_envs = await ddb.scan(scanByInUse);
 
       // No environments available. Bail out.
       if (available_envs.Count == 0) {
@@ -102,7 +68,7 @@ let aws = async function (table_name, pr, branch) {
     },
   };
 
-  await db.update(update);
+  await ddb.update(update);
 
   return {
     url: env.url,
