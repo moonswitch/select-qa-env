@@ -1,10 +1,10 @@
 const core = require('@actions/core');
 const { FieldValue, Firestore } = require('@google-cloud/firestore');
 
-const db = new Firestore();
+const fdb = new Firestore();
 
 let gcp = async function (table_name, pr, branch) {
-  const table = db.collection(table_name);
+  const table = fdb.collection(table_name);
   let env;
   let data;
 

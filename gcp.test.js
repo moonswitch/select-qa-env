@@ -2,16 +2,16 @@ const { Firestore } = require('@google-cloud/firestore');
 const { setupFirebaseData, deleteFirebaseData } = require('./test_helpers');
 const table_name = 'gcp-tests';
 
-const db = new Firestore();
+const fdb = new Firestore();
 
 describe('gcp', () => {
   jest.setTimeout(10000)
   beforeEach(async () => {
-    return await setupFirebaseData(db, table_name);
+    return await setupFirebaseData(fdb, table_name);
   });
   
   afterEach(async () => {
-    return await deleteFirebaseData(db, table_name);
+    return await deleteFirebaseData(fdb, table_name);
   });
 
   const gcp = require('./gcp');
@@ -20,7 +20,7 @@ describe('gcp', () => {
     const pr = 'moonswitch/select-qa-env/pr-42';
     const branch = 'test-branch-1';
     const data = await gcp(table_name, pr, branch);
-    const table = db.collection(table_name);
+    const table = fdb.collection(table_name);
     const docs = await table.where('env_name', '==', data.env_name).limit(1).get();
 
     expect(docs.empty).toBe(false);
@@ -70,7 +70,7 @@ describe('gcp', () => {
     expect(data2.url).toEqual(data1.url);
     expect(data2.env_name).toEqual(data1.env_name);
 
-    const table = db.collection(table_name);
+    const table = fdb.collection(table_name);
     const docs = await table.where('env_name', '==', data1.env_name).limit(1).get();
     const doc = docs.docs[0].data();
 
@@ -81,9 +81,9 @@ describe('gcp', () => {
 
   it('should fail if there are no available environments', async () => {
     // Mark all envs as in_use: true
-    const table = db.collection(table_name);
+    const table = fdb.collection(table_name);
     const docRefs = await table.listDocuments();
-    const docs = await db.getAll(...docRefs);
+    const docs = await fdb.getAll(...docRefs);
     docs.forEach(async (doc) => {
       await doc.ref.update({in_use: true});
     });
@@ -91,11 +91,7 @@ describe('gcp', () => {
     // Run from pr
     const pr = 'moonswitch/select-qa-env/pr-42';
     const branch = 'test-branch-1';
-
-    async function runTask() {
-      return await gcp(table_name, pr, branch);
-    }
     
-    expect(runTask).rejects.toThrow('No QA environments available.')
+    await expect(gcp(table_name, pr, branch)).rejects.toThrow('No QA environments available.')
   });
 });

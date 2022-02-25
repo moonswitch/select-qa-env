@@ -1,5 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { getDynamoDBClient, getDynamoDBInstance } = require('./aws_utils');
+const aws = require('./aws');
 const gcp = require('./gcp');
 
 async function run() {
@@ -12,12 +14,17 @@ async function run() {
     const branch = github.context.payload.pull_request.head.ref;
 
     let data;
+    let ddbClient;
+    let ddb;
     switch (provider) {
       case 'gcp':
         data = await gcp(table_name, pr, branch);
         break;
       case 'aws':
-        throw new Error('AWS support is not yet implemented');
+        ddbClient = getDynamoDBClient();        
+        ddb = getDynamoDBInstance(ddbClient);
+        await aws(ddb, table_name, pr, branch);
+        break;
       default:
         throw new Error(`Unrecognized provider ${provider}. Only 'gcp' and 'aws' are supported.`);
     }
