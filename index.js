@@ -23,7 +23,7 @@ async function run() {
       case 'aws':
         ddbClient = getDynamoDBClient();        
         ddb = getDynamoDBInstance(ddbClient);
-        await aws(ddb, table_name, pr, branch);
+        data = await aws(ddb, table_name, pr, branch);
         break;
       default:
         throw new Error(`Unrecognized provider ${provider}. Only 'gcp' and 'aws' are supported.`);
