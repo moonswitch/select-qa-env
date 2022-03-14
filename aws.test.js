@@ -60,6 +60,11 @@ describe('aws', () => {
 
     expect(data2.url).toEqual(data1.url);
     expect(data2.env_name).toEqual(data1.env_name);
+    
+
+    const doc = (await ddb.get({ TableName: table_name, Key: { env_name: data2.env_name } })).Item;
+
+    expect(doc.pull_requests).toHaveLength(1);
   });
 
   it('should select the same environment based on a matching branch for a different pr', async () => {

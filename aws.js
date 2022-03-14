@@ -54,7 +54,9 @@ let aws = async function (ddb, table_name, pr, branch) {
 
   // Mark the environment as in_use and set the PR for reference.
   core.debug(`Found an available environment. Marking it as in_use by ${pr}`);
-  env.pull_requests.push(pr);
+  if (!env.pull_requests.includes(pr)) {
+    env.pull_requests.push(pr);
+  }
   const update = {
     TableName: table_name,
     Key: {
