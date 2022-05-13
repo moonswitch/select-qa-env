@@ -26,7 +26,7 @@
   "homepage": "https://github.com/moonswitch/select-qa-env#readme",
   "dependencies": {
     "@actions/core": "^1.2.5",
-    "@actions/github": "^5.0.0",
+    "@actions/github": "^5.0.2",
     "@aws-sdk/client-dynamodb": "^3.53.0",
     "@aws-sdk/lib-dynamodb": "^3.53.0",
     "@google-cloud/firestore": "^5.0.2"
